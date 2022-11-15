@@ -221,7 +221,7 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
      */
     public function isBackendSearchable(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -231,7 +231,7 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
      */
     public function isBackendActive(): bool
     {
-        return true;
+        return false;
     }
 
     /**
