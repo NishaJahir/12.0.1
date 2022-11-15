@@ -214,16 +214,6 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
         return false;
     }
 
-     /**
-     * Check if this payment method should be searchable in the backend
-     *
-     * @return bool
-     */
-    public function isBackendSearchable(): bool
-    {
-        return false;
-    }
-
     /**
      * Check if this payment method should be active in the backend
      *
@@ -231,7 +221,7 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
      */
     public function isBackendActive(): bool
     {
-        return false;
+        return true;
     }
 
     /**
