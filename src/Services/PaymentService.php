@@ -1019,7 +1019,7 @@ class PaymentService
     public function getMultibancoReferenceInformation($transactionData)
     {
         $multibancoComments  = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('multibanco_reference_text'), $transactionData['amount'], $transactionData['currency'] );
-        $multibancoComments .= PHP_EOL . $this->paymentHelper->getTranslatedText('multibanco_reference_one') . $transactionData['partner_payment_ref'];
+        $multibancoComments .= PHP_EOL . $this->paymentHelper->getTranslatedText('multibanco_reference_one') . $transactionData['partner_payment_reference'];
         $multibancoComments .= PHP_EOL . $this->paymentHelper->getTranslatedText('multibanco_reference_two') . $transactionData['service_supplier_id'];
         return $multibancoComments;
     }
