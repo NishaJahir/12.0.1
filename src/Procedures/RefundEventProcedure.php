@@ -109,7 +109,9 @@ class RefundEventProcedure
             }
             // Get necessary information for the refund process
             $transactionDetails = $this->paymentService->getDetailsFromPaymentProperty($parentOrderId);
+            $this->getLogger(__METHOD__)->error('refund tx', $transactionDetails);
             if(in_array($transactionDetails['tx_status'], ['PENDING', 'CONFIRMED'])) {
+                $this->getLogger(__METHOD__)->error('refund tx1', $transactionDetails['tx_status']);
                 // Novalnet access key
                 $privateKey = $this->settingsService->getPaymentSettingsValue('novalnet_private_key');
                 $paymentRequestData = [];
@@ -119,8 +121,10 @@ class RefundEventProcedure
                 // Send the payment capture/void call to Novalnet server
                 $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYMENT_REFUND_URL, $privateKey);
                 $paymentResponseData = array_merge($paymentRequestData, $paymentResponseData);
+                $this->getLogger(__METHOD__)->error('refund res', $paymentResponseData);
                 // If refund is successful
                 if(in_array($paymentResponseData['transaction']['status'], ['PENDING', 'CONFIRMED', 'DEACTIVATED'])) {
+                    $this->getLogger(__METHOD__)->error('refund res122', $paymentResponseData['transaction']['status']);
                     // Booking text
                     if(!empty($paymentResponseData['transaction']['refund']['tid'])) {
                         $paymentResponseData['bookingText'] = sprintf($this->paymentHelper->getTranslatedText('refund_message_new_tid', $orderLanguage), $paymentResponseData['transaction']['tid'], sprintf('%0.2f', ($paymentResponseData['transaction']['refund']['amount'] / 100)) , $paymentCurrency, $paymentResponseData['transaction']['refund']['tid']);
