@@ -263,7 +263,8 @@ class NovalnetServiceProvider extends ServiceProvider
                             }
                         }
                     } else {
-                        $this->getLogger(__METHOD__)->error('here3', $paymentRequestData);
+                        $nnResponseData = $sessionStorage->getPlugin()->getValue('nnPaymentData');
+                        $this->getLogger(__METHOD__)->error('responsing', $nnResponseData);
                             // Handle the further process to the order based on the payment response for direct payment payments
                             $paymentService->HandlePaymentResponse();
                    }
