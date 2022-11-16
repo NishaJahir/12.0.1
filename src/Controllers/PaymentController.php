@@ -199,20 +199,11 @@ class PaymentController extends Controller
         if(!empty($paymentRequestPostData['nn_cc3d_redirect']) || !empty($paymentRequestPostData['nn_google_pay_do_redirect'])) {
             $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
-            if(!empty($paymentRequestPostData['nn_reinitializePayment'])) {
+            if(!empty($paymentRequestPostData['nn_reinitializePayment']) || $this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
                 return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/payment/novalnet/redirectPayment');
-            } else {
-                if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
-                $paymentResponseData = $this->paymentService->performServerCall();
-                    if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
-                        $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
-                        // return back to the customer on checkout page
-                        return $this->response->redirectTo('checkout');
-                    }
-                }
+            }
                 // Call the shop executePayment function
                 return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
-            }
         }
         // Set the payment requests in the session for the further processings
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
