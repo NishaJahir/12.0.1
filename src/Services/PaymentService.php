@@ -484,7 +484,7 @@ class PaymentService
                     $this->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
             }
             // Set the payment response in the session for the further processings
-            $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
+            $this->sessionStorage->getPlugin()->setValue('nnPaymentResponseData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
            // If payment before order creation option was set as 'Yes' handle the further process to the order based on the payment response
            if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || !empty($nnOrderCreator)) {
                $this->getLogger(__METHOD__)->error('here6', $paymentResponseData);
@@ -570,7 +570,9 @@ class PaymentService
      */
     public function HandlePaymentResponse()
     {
-        $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
+        $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentResponseData');
+        $this->getLogger(__METHOD__)->error('response data', $nnPaymentData);
+        $this->sessionStorage->getPlugin()->setValue('nnPaymentResponseData', null);
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', null);
         $nnPaymentData['mop']            = $this->sessionStorage->getPlugin()->getValue('mop');
         $nnPaymentData['payment_method'] = strtolower($this->paymentHelper->getPaymentKeyByMop($nnPaymentData['mop']));
