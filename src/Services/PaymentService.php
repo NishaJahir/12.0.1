@@ -573,6 +573,8 @@ class PaymentService
         $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
         $this->getLogger(__METHOD__)->error('response data123', $nnPaymentData);
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', null);
+        $this->sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
+        $this->sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', null);
         $nnPaymentData['mop']            = $this->sessionStorage->getPlugin()->getValue('mop');
         $nnPaymentData['payment_method'] = strtolower($this->paymentHelper->getPaymentKeyByMop($nnPaymentData['mop']));
         // If Order No is not received from the payment response assign the from the session
