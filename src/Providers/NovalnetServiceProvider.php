@@ -82,9 +82,7 @@ class NovalnetServiceProvider extends ServiceProvider
         $this->registerPaymentMethods($payContainer);
         // Render the payment methods
         $this->registerPaymentRendering($eventDispatcher, $basketRepository, $paymentHelper, $paymentService, $sessionStorage, $twig, $settingsService);
-        // Assign the paymentsif($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || !empty($nnOrderCreator)) {
-                $this->HandlePaymentResponse();
-           }
+        // Assign the payments
         $this->registerPaymentExecute($eventDispatcher, $paymentHelper, $paymentService, $sessionStorage, $settingsService);
         // Register the event procedures
         $this->registerEvents($eventProceduresService);
