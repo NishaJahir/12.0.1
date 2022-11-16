@@ -150,7 +150,6 @@ class NovalnetServiceProvider extends ServiceProvider
                     if(in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO'])
                     || $paymentService->isRedirectPayment($paymentKey)
                     || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false)) {
-                        $this->getLogger(__METHOD__)->error('here', $paymentRequestData);
                         $content = '';
                         $contentType = 'continue';
                     } elseif(in_array($paymentKey, ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_SEPA'])) {
@@ -186,11 +185,11 @@ class NovalnetServiceProvider extends ServiceProvider
 
                 // If payment before order creation option was set as 'No' the payment will be created initially
                 if($settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) { 
-                    $this->getLogger(__METHOD__)->error('here1', $paymentRequestData);
                     if(in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false) || $paymentService->isRedirectPayment($paymentKey)) {
                         $privateKey = $settingsService->getPaymentSettingsValue('novalnet_private_key');
-                        $this->getLogger(__METHOD__)->error('here2', $paymentRequestData);
                         $paymentResponseData = $paymentService->performServerCall();
+                        $nnResponseData = $sessionStorage->getPlugin()->getValue('nnPaymentData');
+                        $this->getLogger(__METHOD__)->error('responsing789', $nnResponseData);
                         if(!empty($paymentResponseData) && ($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['status'] == 'FAILURE')) {
                             $errorMsg = !empty($paymentResponseData['result']['status_text']) ? $paymentResponseData['result']['status_text'] : $paymentResponseData['status_text'];
                             $content = $errorMsg;
