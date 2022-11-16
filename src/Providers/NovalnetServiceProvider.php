@@ -82,7 +82,9 @@ class NovalnetServiceProvider extends ServiceProvider
         $this->registerPaymentMethods($payContainer);
         // Render the payment methods
         $this->registerPaymentRendering($eventDispatcher, $basketRepository, $paymentHelper, $paymentService, $sessionStorage, $twig, $settingsService);
-        // Assign the payments
+        // Assign the paymentsif($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || !empty($nnOrderCreator)) {
+                $this->HandlePaymentResponse();
+           }
         $this->registerPaymentExecute($eventDispatcher, $paymentHelper, $paymentService, $sessionStorage, $settingsService);
         // Register the event procedures
         $this->registerEvents($eventProceduresService);
@@ -150,6 +152,7 @@ class NovalnetServiceProvider extends ServiceProvider
                     if(in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO'])
                     || $paymentService->isRedirectPayment($paymentKey)
                     || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false)) {
+                        $this->getLogger(__METHOD__)->error('here', $paymentRequestData);
                         $content = '';
                         $contentType = 'continue';
                     } elseif(in_array($paymentKey, ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_SEPA'])) {
@@ -185,8 +188,10 @@ class NovalnetServiceProvider extends ServiceProvider
 
                 // If payment before order creation option was set as 'No' the payment will be created initially
                 if($settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) { 
+                    $this->getLogger(__METHOD__)->error('here1', $paymentRequestData);
                     if(in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false) || $paymentService->isRedirectPayment($paymentKey)) {
                         $privateKey = $settingsService->getPaymentSettingsValue('novalnet_private_key');
+                        $this->getLogger(__METHOD__)->error('here2', $paymentRequestData);
                         $paymentResponseData = $paymentService->performServerCall();
                         if(!empty($paymentResponseData) && ($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['status'] == 'FAILURE')) {
                             $errorMsg = !empty($paymentResponseData['result']['status_text']) ? $paymentResponseData['result']['status_text'] : $paymentResponseData['status_text'];
@@ -260,6 +265,7 @@ class NovalnetServiceProvider extends ServiceProvider
                             }
                         }
                     } else {
+                        $this->getLogger(__METHOD__)->error('here3', $paymentRequestData);
                             // Handle the further process to the order based on the payment response for direct payment payments
                             $paymentService->HandlePaymentResponse();
                    }
