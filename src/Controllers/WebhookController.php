@@ -177,8 +177,9 @@ class WebhookController extends Controller
                     return $this->handleTransactionCredit();
                 case 'CHARGEBACK':
                     return $this->handleChargeback();
-                case 'PAYMENT_REMINDER':
-                case 'COLLECTION':
+                case 'PAYMENT_REMINDER_1':
+                case 'PAYMENT_REMINDER_2':
+                case 'SUBMISSION_TO_COLLECTION_AGENCY':
                     return $this->handlePaymentNotifications();
                 default:
                     return $this->renderTemplate('The webhook notification has been received for the unhandled EVENT type ( ' . $this->eventType . ')' );
