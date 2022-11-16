@@ -214,6 +214,8 @@ class PaymentController extends Controller
             if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
                 $paymentResponseData = $this->paymentService->performServerCall();
                 if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
+                    $this->sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
+                    $this->sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', null);
                     $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
                     // return back to the customer on checkout page
                     return $this->response->redirectTo('checkout');
