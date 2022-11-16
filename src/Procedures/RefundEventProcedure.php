@@ -123,7 +123,7 @@ class RefundEventProcedure
                 $paymentResponseData = array_merge($paymentRequestData, $paymentResponseData);
                 $this->getLogger(__METHOD__)->error('refund res', $paymentResponseData);
                 // If refund is successful
-                if(in_array($paymentResponseData['transaction']['status'], ['PENDING', 'CONFIRMED', 'DEACTIVATED'])) {
+                if($paymentResponseData['result']['status'] == 'SUCCESS' && in_array($paymentResponseData['transaction']['status'], ['PENDING', 'CONFIRMED', 'DEACTIVATED'])) {
                     $this->getLogger(__METHOD__)->error('refund res122', $paymentResponseData['transaction']['status']);
                     // Booking text
                     if(!empty($paymentResponseData['transaction']['refund']['tid'])) {
