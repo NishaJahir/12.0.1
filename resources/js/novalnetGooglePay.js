@@ -99,9 +99,28 @@ jQuery(document).ready(function() {
                     jQuery('#nn_google_pay_form').prev('div').hide();
                }
             });
+                // Accept the terms and condition when click the Google pay button
+                isGooglePayAccept();
+                jQuery(document).on('click','.widget-gtc-check',function(){
+                    isGooglePayAccept();
+                });
+                jQuery(document).on('click','#nn_google_pay',function() {
+                    if (!jQuery('.widget-gtc-check input[type="checkbox"]').is(':checked')) {
+                        alert('please click the terms and condition');
+                    }
+                });
         });
     } catch (e) {
         // Handling the errors from the payment intent setup
         console.log(e.message);
     }
 });
+
+function isGooglePayAccept()
+{
+    if (!jQuery(this).find('input[type="checkbox"]').is(':checked')) {
+        $('#nn_google_pay').find('button').prop('disabled',true);
+    } else {
+        $('#nn_google_pay').find('button').prop('disabled',false);
+    }
+}
