@@ -245,6 +245,8 @@ class PaymentController extends Controller
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
         $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         $nnGooglePayDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
+        $this->sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
+        $this->sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', null);
         if($this->paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect)) {
             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
                 // Transaction secret used for the later checksum verification
