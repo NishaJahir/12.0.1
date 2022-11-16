@@ -465,6 +465,7 @@ class PaymentService
         }
         $privateKey = $this->settingsService->getPaymentSettingsValue('novalnet_private_key');
         $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
+       $this->getLogger(__METHOD__)->error('here4', $paymentResponseData);
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
         // Do redirect if the redirect URL is present
         if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect))) {
@@ -472,6 +473,7 @@ class PaymentService
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData['paymentRequestData']);
             return $paymentResponseData;
         } else {
+            $this->getLogger(__METHOD__)->error('here5', $paymentResponseData);
             // Push notification to customer regarding the payment response
             if($isPaymentSuccess) {
                 $this->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
@@ -485,7 +487,8 @@ class PaymentService
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
            // If payment before order creation option was set as 'Yes' handle the further process to the order based on the payment response
            if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || !empty($nnOrderCreator)) {
-                $this->HandlePaymentResponse();
+               $this->getLogger(__METHOD__)->error('here6', $paymentResponseData);
+               $this->HandlePaymentResponse();
            }
         }
     }
